@@ -116,11 +116,8 @@ arv_gc_integer_node_get_value_as_string (ArvGcFeatureNode *node, GError **error)
 	GError *local_error = NULL;
 	const char *string;
 	if (integer_node->value == NULL) {
-        printf("integer value is NULL");
         if (integer_node->index!=NULL){
             string = arv_gc_property_node_get_string (ARV_GC_PROPERTY_NODE (integer_node->index), &local_error);
-            printf("index value %s", string);
-
             } else
         return NULL;
     }
@@ -187,16 +184,11 @@ arv_gc_integer_node_get_integer_value (ArvGcInteger *gc_integer, GError **error)
     GSList *iter;
 
     if (gc_integer_node->value == NULL) {
-        printf("integer value is NULL\n ");
         if (gc_integer_node->index!=NULL){
             //const char * string;
             //string = arv_gc_property_node_get_string (ARV_GC_PROPERTY_NODE (gc_integer_node->index), &local_error);
             gint64 index_value;
             index_value = arv_gc_property_node_get_int64 (ARV_GC_PROPERTY_NODE (gc_integer_node->index), &local_error);
-            printf("index value %d \n", index_value);
-
-
-
             for (iter = gc_integer_node->indexed_values; iter != NULL; iter = iter->next) {
                 ArvGcPropertyNode *variable_node = iter->data;
 				if (index_value==atoi(variable_node->index)){
