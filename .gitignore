@@ -44,3 +44,8 @@ aravis-*.tar.gz
 aravis-*.tar.xz
 INSTALL
 compile
+aravis-*/
+core.*
+tags
+.buildconfig
+.exrc

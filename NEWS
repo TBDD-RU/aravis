@@ -1,3 +1,46 @@
+Release 0.5.2
+=============
+
+  * viewer: only show compatbile pixel format in selector
+  * viewer: fix binning setting on some cameras
+  * viewer: add a fallback to autovideosink if gtk[gl]sink are not available
+  * viewer: fix video position issue
+  * usb3vision: avoid unnecessary memory during video data transfer
+  * usb3vision: better handling of device disconnection
+  * gigevision: compile time selection of fast heartbeat mode (Michele)
+  * camera: helper function for single image acquisition
+
+Release 0.5.1
+=============
+
+  * viewer: new design with support for region settings
+  * usb3vision improvements
+  * camera: improve Basler support for exposure and frame rate
+  * camera: add support for x/y_offset and binning bounds
+  * interface: add vendor, model and serial getters
+  * genicam: implement min/max support for Converter elements
+
+Release 0.5.0
+=============
+
+  * usb3vision initial support
+
+Release 0.4.0
+=============
+
+  * buffer: add a timestamp setter
+  * interface: don't touch device list on open device
+  * viewer: fix appdata file
+
+Release 0.3.8
+=============
+
+  * genicam: add bigendian support (Emmanuel)
+  * camera: RICOH camera support (Anil)
+  * build fixes (Emmanuel)
+  * dox fixes (Jarek, Emmanuel)
+  * translation updates (Jordi, Jiri, Anders, Μύρων, Pedro, Cédric, Samir, Necdet)
+
 Release 0.3.7
 =============
 

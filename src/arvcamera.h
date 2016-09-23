@@ -66,10 +66,16 @@ const char *	arv_camera_get_device_id	(ArvCamera *camera);
 void 		arv_camera_get_sensor_size 	(ArvCamera *camera, gint *width, gint *height);
 void		arv_camera_set_region		(ArvCamera *camera, gint x, gint y, gint width, gint height);
 void		arv_camera_get_region		(ArvCamera *camera, gint *x, gint *y, gint *width, gint *height);
+void		arv_camera_get_x_offset_bounds	(ArvCamera *camera, gint *min, gint *max);
+void		arv_camera_get_y_offset_bounds	(ArvCamera *camera, gint *min, gint *max);
 void		arv_camera_get_width_bounds	(ArvCamera *camera, gint *min, gint *max);
 void		arv_camera_get_height_bounds	(ArvCamera *camera, gint *min, gint *max);
 void		arv_camera_set_binning		(ArvCamera *camera, gint dx, gint dy);
 void		arv_camera_get_binning		(ArvCamera *camera, gint *dx, gint *dy);
+void		arv_camera_get_x_binning_bounds	(ArvCamera *camera, gint *min, gint *max);
+void		arv_camera_get_y_binning_bounds	(ArvCamera *camera, gint *min, gint *max);
+
+gboolean	arv_camera_is_binning_available (ArvCamera *camera);
 
 void 		arv_camera_set_pixel_format 				(ArvCamera *camera, ArvPixelFormat format);
 void		arv_camera_set_pixel_format_from_string 		(ArvCamera *camera, const char * format);
@@ -84,6 +90,8 @@ const char **	arv_camera_get_available_pixel_formats_as_display_names	(ArvCamera
 void		arv_camera_start_acquisition		(ArvCamera *camera);
 void		arv_camera_stop_acquisition		(ArvCamera *camera);
 void		arv_camera_abort_acquisition		(ArvCamera *camera);
+
+ArvBuffer *	arv_camera_acquisition			(ArvCamera *camera, guint64 timeout);
 
 void			arv_camera_set_acquisition_mode 	(ArvCamera *camera, ArvAcquisitionMode value);
 ArvAcquisitionMode 	arv_camera_get_acquisition_mode 	(ArvCamera *camera);

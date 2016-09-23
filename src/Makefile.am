@@ -14,7 +14,7 @@ AM_CFLAGS = -Wall
 
 lib_LTLIBRARIES = libaravis-@ARAVIS_API_VERSION@.la
 
-BUILT_SOURCES = arvenumtypes.h arvenumtypes.c
+BUILT_SOURCES = arvenumtypes.h arvenumtypes.c arvfeatures.h
 
 EXTRA_DIST += arvenumtypes.h.template \
 	      arvenumtypes.c.template
@@ -153,8 +153,29 @@ noinst_HEADERS =				\
 	arvbufferprivate.h			\
 	arvchunkparserprivate.h			\
 	arvdeviceprivate.h			\
+	arvuvdeviceprivate.h			\
 	arvstreamprivate.h			\
 	arvrealtimeprivate.h
+
+if ARAVIS_BUILD_USB
+ARAVIS_SRCS +=					\
+	arvuvinterface.c			\
+	arvuvdevice.c				\
+	arvuvstream.c
+
+ARAVIS_SRCS_NO_INTRO +=				\
+	arvuvcp.c				\
+	arvuvsp.c
+
+ARAVIS_HDRS +=					\
+	arvuvinterface.h			\
+	arvuvdevice.h				\
+	arvuvstream.h
+
+ARAVIS_HDRS_NO_INTRO +=				\
+	arvuvcp.h				\
+	arvuvsp.h
+endif
 
 arv_fake_cameradir = $(aravis_datadir)
 arv_fake_camera_DATA = arv-fake-camera.xml
@@ -166,6 +187,8 @@ libaravis_@ARAVIS_API_VERSION@_la_SOURCES = $(ARAVIS_SRCS) $(ARAVIS_SRCS_NO_INTR
 libaravis_@ARAVIS_API_VERSION@_ladir = $(includedir)/aravis-@ARAVIS_API_VERSION@
 libaravis_@ARAVIS_API_VERSION@_la_HEADERS = $(ARAVIS_HDRS) $(ARAVIS_HDRS_NO_INTRO)
 libaravis_@ARAVIS_API_VERSION@_la_HEADERS += arvenumtypes.h
+
+nodist_libaravis_@ARAVIS_API_VERSION@_la_HEADERS = arvfeatures.h
 
 arvenumtypes.h: arvenumtypes.h.template $(ARAVIS_HDRS) $(ARAVIS_HDRS_NO_INTRO) $(GLIB_MKENUMS)
 	$(AM_V_GEN) (cd $(srcdir) && $(GLIB_MKENUMS) --template arvenumtypes.h.template $(libaravis_@ARAVIS_API_VERSION@_la_HEADERS)) > $@
