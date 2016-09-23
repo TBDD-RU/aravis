@@ -38,6 +38,7 @@
 #include <arvmisc.h>
 #include <arvdebug.h>
 #include <string.h>
+#include <stdio.h>
 
 static GObjectClass *parent_class = NULL;
 
@@ -130,6 +131,10 @@ arv_gc_property_node_get_node_name (ArvDomNode *node)
 			return "pVariable";
 		case ARV_GC_PROPERTY_NODE_TYPE_P_COMMAND_VALUE:
 			return "pCommandValue";
+		case ARV_GC_PROPERTY_NODE_TYPE_P_VALUE_INDEXED:
+			return "pValueIndexed";
+		case ARV_GC_PROPERTY_NODE_TYPE_VALUE_INDEXED:
+			return "ValueIndexed";
 
 		default:
 			return "Unknown";
@@ -165,6 +170,14 @@ _pre_remove_child (ArvDomNode *parent, ArvDomNode *child)
 static void
 arv_gc_property_node_set_attribute (ArvDomElement *self, const char *name, const char *value)
 {
+    ArvGcPropertyNode *property_node = ARV_GC_PROPERTY_NODE (self);
+
+    if (strcmp (name, "Index") == 0) {
+        g_free (property_node->index);
+        property_node->index = g_strdup (value);
+    }
+
+
 }
 
 static const char *
@@ -239,6 +252,7 @@ arv_gc_property_node_get_string (ArvGcPropertyNode *node, GError **error)
 	g_return_val_if_fail (error == NULL || *error == NULL, NULL);
 
 	pvalue_node = _get_pvalue_node (node);
+
 	if (pvalue_node == NULL)
 		return _get_value_data (node);
 
@@ -687,6 +701,20 @@ arv_gc_property_node_new_chunk_id (void)
 {
 	return arv_gc_property_node_new (ARV_GC_PROPERTY_NODE_TYPE_CHUNK_ID);
 }
+
+
+ArvGcNode *
+arv_gc_property_node_new_p_value_indexed (void)
+{
+	return arv_gc_property_node_new (ARV_GC_PROPERTY_NODE_TYPE_P_VALUE_INDEXED);
+}
+
+ArvGcNode *
+arv_gc_property_node_new_value_indexed (void)
+{
+	return arv_gc_property_node_new (ARV_GC_PROPERTY_NODE_TYPE_VALUE_INDEXED);
+}
+
 
 static void
 arv_gc_property_node_init (ArvGcPropertyNode *gc_property_node)

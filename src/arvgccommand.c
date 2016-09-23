@@ -54,7 +54,9 @@ arv_gc_command_post_new_child (ArvDomNode *self, ArvDomNode *child)
 
 		switch (arv_gc_property_node_get_node_type (property_node)) {
 			case ARV_GC_PROPERTY_NODE_TYPE_VALUE:
+			case ARV_GC_PROPERTY_NODE_TYPE_VALUE_INDEXED:
 			case ARV_GC_PROPERTY_NODE_TYPE_P_VALUE:
+			case ARV_GC_PROPERTY_NODE_TYPE_P_VALUE_INDEXED:
 				node->value = property_node;
 				break;
 			case ARV_GC_PROPERTY_NODE_TYPE_COMMAND_VALUE:

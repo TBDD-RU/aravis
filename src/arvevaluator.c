@@ -31,6 +31,7 @@
 #include <arvstr.h>
 #include <math.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 #define ARV_EVALUATOR_STACK_SIZE	128
 
@@ -111,6 +112,7 @@ typedef enum {
 	ARV_EVALUATOR_TOKEN_FUNCTION_SQRT,
 	ARV_EVALUATOR_TOKEN_FUNCTION_TRUNC,
 	ARV_EVALUATOR_TOKEN_FUNCTION_FLOOR,
+	ARV_EVALUATOR_TOKEN_FUNCTION_ROUND,
 	ARV_EVALUATOR_TOKEN_FUNCTION_CEIL,
 	ARV_EVALUATOR_TOKEN_FUNCTION_ASIN,
 	ARV_EVALUATOR_TOKEN_FUNCTION_ACOS,
@@ -173,6 +175,7 @@ static ArvEvaluatorTokenInfos arv_evaluator_token_infos[] = {
 	{"sqrt",200,	1, 0}, /* FUNCTION_SQRT */
 	{"trunc",200,	1, 0}, /* FUNCTION_TRUNC */
 	{"floor",200,	1, 0}, /* FUNCTION_FLOOR */
+	{"round",200,	2, 0},
 	{"ceil",200, 	1, 0}, /* FUNCTION_CEIL */
 	{"asin",200, 	1, 0}, /* FUNCTION_ASIN */
 	{"acos",200, 	1, 0}, /* FUNCTION_ACOS */
@@ -402,6 +405,10 @@ arv_get_next_token (char **expression, ArvEvaluatorToken *previous_token)
 				token_id = ARV_EVALUATOR_TOKEN_FUNCTION_TRUNC;
 			else if (g_ascii_strncasecmp ("floor", *expression, token_length) == 0)
 				token_id = ARV_EVALUATOR_TOKEN_FUNCTION_FLOOR;
+			else if (g_ascii_strncasecmp ("round", *expression, token_length) == 0) {
+				token_id = ARV_EVALUATOR_TOKEN_FUNCTION_ROUND;
+
+			}
 		}
 
 		if (token_id != ARV_EVALUATOR_TOKEN_UNKNOWN)
@@ -750,6 +757,9 @@ evaluate (GSList *token_stack, GHashTable *variables, gint64 *v_int64, double *v
 				break;
 			case ARV_EVALUATOR_TOKEN_FUNCTION_FLOOR:
 				arv_value_set_double (&stack[index], floor (arv_value_get_double (&stack[index])));
+				break;
+			case ARV_EVALUATOR_TOKEN_FUNCTION_ROUND:
+				arv_value_set_double (&stack[index], round (arv_value_get_double (&stack[index])));
 				break;
 			case ARV_EVALUATOR_TOKEN_FUNCTION_CEIL:
 				arv_value_set_double (&stack[index], ceil (arv_value_get_double (&stack[index])));

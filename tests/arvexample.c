@@ -81,6 +81,7 @@ main (int argc, char **argv)
 		arv_camera_set_frame_rate (camera, 10.0);
 		/* retrieve image payload (number of bytes per image) */
 		payload = arv_camera_get_payload (camera);
+                printf(" payload: %d \n", payload);
 
 		/* Create a new stream object */
 		stream = arv_camera_create_stream (camera, NULL, NULL);

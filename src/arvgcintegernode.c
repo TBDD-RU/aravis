@@ -31,6 +31,7 @@
 #include <arvmisc.h>
 #include <string.h>
 #include <stdlib.h>
+#include <stdio.h>
 
 static GObjectClass *parent_class = NULL;
 
@@ -46,11 +47,14 @@ static void
 arv_gc_integer_node_post_new_child (ArvDomNode *self, ArvDomNode *child)
 {
 	ArvGcIntegerNode *node = ARV_GC_INTEGER_NODE (self);
-
 	if (ARV_IS_GC_PROPERTY_NODE (child)) {
 		ArvGcPropertyNode *property_node = ARV_GC_PROPERTY_NODE (child);
 
 		switch (arv_gc_property_node_get_node_type (property_node)) {
+            case ARV_GC_PROPERTY_NODE_TYPE_VALUE_INDEXED:
+            case ARV_GC_PROPERTY_NODE_TYPE_P_VALUE_INDEXED:
+                node->indexed_values = g_slist_prepend (node->indexed_values, property_node);
+                break;
 			case ARV_GC_PROPERTY_NODE_TYPE_VALUE:
 			case ARV_GC_PROPERTY_NODE_TYPE_P_VALUE:
 				node->value = property_node;
@@ -59,6 +63,9 @@ arv_gc_integer_node_post_new_child (ArvDomNode *self, ArvDomNode *child)
 			case ARV_GC_PROPERTY_NODE_TYPE_P_MINIMUM:
 				node->minimum = property_node;
 				break;
+            case ARV_GC_PROPERTY_NODE_TYPE_P_INDEX:
+                node->index = property_node;
+                break;
 			case ARV_GC_PROPERTY_NODE_TYPE_MAXIMUM:
 			case ARV_GC_PROPERTY_NODE_TYPE_P_MAXIMUM:
 				node->maximum = property_node;
@@ -108,9 +115,15 @@ arv_gc_integer_node_get_value_as_string (ArvGcFeatureNode *node, GError **error)
 	ArvGcIntegerNode *integer_node = ARV_GC_INTEGER_NODE (node);
 	GError *local_error = NULL;
 	const char *string;
+	if (integer_node->value == NULL) {
+        printf("integer value is NULL");
+        if (integer_node->index!=NULL){
+            string = arv_gc_property_node_get_string (ARV_GC_PROPERTY_NODE (integer_node->index), &local_error);
+            printf("index value %s", string);
 
-	if (integer_node->value == NULL)
-		return NULL;
+            } else
+        return NULL;
+    }
 
 	string = arv_gc_property_node_get_string (ARV_GC_PROPERTY_NODE (integer_node->value), &local_error);
 
@@ -171,11 +184,35 @@ arv_gc_integer_node_get_integer_value (ArvGcInteger *gc_integer, GError **error)
 	ArvGcIntegerNode *gc_integer_node = ARV_GC_INTEGER_NODE (gc_integer);
 	GError *local_error = NULL;
 	gint64 value;
+    GSList *iter;
 
-	if (gc_integer_node->value == NULL)
-		return 0;
+    if (gc_integer_node->value == NULL) {
+        printf("integer value is NULL\n ");
+        if (gc_integer_node->index!=NULL){
+            //const char * string;
+            //string = arv_gc_property_node_get_string (ARV_GC_PROPERTY_NODE (gc_integer_node->index), &local_error);
+            gint64 index_value;
+            index_value = arv_gc_property_node_get_int64 (ARV_GC_PROPERTY_NODE (gc_integer_node->index), &local_error);
+            printf("index value %d \n", index_value);
 
-	value = arv_gc_property_node_get_int64 (ARV_GC_PROPERTY_NODE (gc_integer_node->value), &local_error);
+
+
+            for (iter = gc_integer_node->indexed_values; iter != NULL; iter = iter->next) {
+                ArvGcPropertyNode *variable_node = iter->data;
+				if (index_value==atoi(variable_node->index)){
+					return arv_gc_property_node_get_int64 (ARV_GC_PROPERTY_NODE (variable_node), &local_error);
+				}
+
+            }
+
+
+            return 0;
+        } else
+            return 0;
+    }
+
+
+    value = arv_gc_property_node_get_int64 (ARV_GC_PROPERTY_NODE (gc_integer_node->value), &local_error);
 
 	if (local_error != NULL) {
 		g_propagate_error (error, local_error);

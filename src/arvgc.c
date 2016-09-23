@@ -125,6 +125,10 @@ arv_gc_create_element (ArvDomDocument *document, const char *tag_name)
 		node = arv_gc_property_node_new_value ();
 	else if (strcmp (tag_name, "pValue") == 0)
 		node = arv_gc_property_node_new_p_value ();
+	else if (strcmp (tag_name, "ValueIndexed") == 0)
+		node = arv_gc_property_node_new_value_indexed ();
+	else if (strcmp (tag_name, "pValueIndexed") == 0)
+		node = arv_gc_property_node_new_p_value_indexed ();
 	else if (strcmp (tag_name, "Address") == 0)
 		node = arv_gc_property_node_new_address ();
 	else if (strcmp (tag_name, "pAddress") == 0)

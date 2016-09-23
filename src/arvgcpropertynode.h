@@ -73,7 +73,9 @@ typedef enum {
 	ARV_GC_PROPERTY_NODE_TYPE_P_PORT,
 	ARV_GC_PROPERTY_NODE_TYPE_P_VARIABLE,
 	ARV_GC_PROPERTY_NODE_TYPE_P_INVALIDATOR,
-	ARV_GC_PROPERTY_NODE_TYPE_P_COMMAND_VALUE
+	ARV_GC_PROPERTY_NODE_TYPE_P_COMMAND_VALUE,
+	ARV_GC_PROPERTY_NODE_TYPE_P_VALUE_INDEXED,
+	ARV_GC_PROPERTY_NODE_TYPE_VALUE_INDEXED
 } ArvGcPropertyNodeType;
 
 #define ARV_TYPE_GC_PROPERTY_NODE             (arv_gc_property_node_get_type ())
@@ -93,6 +95,7 @@ struct _ArvGcPropertyNode {
 
 	gboolean value_data_up_to_date;
 	char *value_data;
+	char *index; //TODO: extract to class IndexedValueNode
 };
 
 struct _ArvGcPropertyNodeClass {
@@ -140,6 +143,9 @@ ArvGcNode * 	arv_gc_property_node_new_bit			(void);
 ArvGcNode * 	arv_gc_property_node_new_command_value		(void);
 ArvGcNode * 	arv_gc_property_node_new_p_command_value	(void);
 ArvGcNode * 	arv_gc_property_node_new_chunk_id 		(void);
+ArvGcNode *     arv_gc_property_node_new_p_value_indexed (void);
+ArvGcNode *     arv_gc_property_node_new_value_indexed (void);
+
 
 const char * 		arv_gc_property_node_get_string 	(ArvGcPropertyNode *node, GError **error);
 void	 		arv_gc_property_node_set_string 	(ArvGcPropertyNode *node, const char *string, GError **error);

@@ -42,10 +42,12 @@ struct _ArvGcIntegerNode {
 	ArvGcFeatureNode	node;
 
 	ArvGcPropertyNode *value;
+	ArvGcPropertyNode *index;
 	ArvGcPropertyNode *minimum;
 	ArvGcPropertyNode *maximum;
 	ArvGcPropertyNode *increment;
 	ArvGcPropertyNode *unit;
+	GSList *indexed_values;
 };
 
 struct _ArvGcIntegerNodeClass {
