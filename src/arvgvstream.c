@@ -25,6 +25,7 @@
  * @short_description: GigEVision stream
  */
 
+#include <arvrealtime.h>
 #include <arvgvstream.h>
 #include <arvstreamprivate.h>
 #include <arvbufferprivate.h>
@@ -592,6 +593,11 @@ arv_gv_stream_thread (void *data)
 	gboolean first_packet = TRUE;
 
 	thread_data->frames = NULL;
+	if (arv_make_thread_realtime(99)){
+		printf("make internal thread realtime\n");
+	} else {
+		printf("ERROR make internal thread realtime\n");
+	}
 
 	arv_debug_stream_thread ("[GvStream::stream_thread] Packet timeout = %g ms",
 				 thread_data->packet_timeout_us / 1000.0);
