@@ -815,6 +815,7 @@ ArvGcClass
 ArvGcNameSpace
 ArvGcAccessMode
 ArvGcCachable
+ArvGcSignedness
 arv_gc_get_int64_from_value
 arv_gc_set_int64_to_value
 arv_gc_get_double_from_value
@@ -1689,6 +1690,7 @@ arv_debug_category_interface
 arv_debug_category_misc
 arv_debug_category_stream
 arv_debug_category_stream_thread
+arv_debug_category_viewer
 arv_debug_device
 arv_debug_dom
 arv_debug_evaluator
@@ -1699,6 +1701,7 @@ arv_debug_interface
 arv_debug_misc
 arv_debug_stream
 arv_debug_stream_thread
+arv_debug_viewer
 arv_log
 arv_log_device
 arv_log_dom
@@ -1710,6 +1713,7 @@ arv_log_interface
 arv_log_misc
 arv_log_stream
 arv_log_stream_thread
+arv_log_viewer
 arv_warning
 arv_warning_device
 arv_warning_dom
@@ -1721,6 +1725,7 @@ arv_warning_interface
 arv_warning_misc
 arv_warning_stream
 arv_warning_stream_thread
+arv_warning_viewer
 arv_g_string_append_hex_dump
 arv_debug_category_chunk
 arv_debug_chunk
@@ -1745,7 +1750,7 @@ arv_gvsp_packet_get_height
 arv_gvsp_packet_get_packet_id
 arv_gvsp_packet_get_packet_type
 arv_gvsp_packet_get_content_type
-arv_gvsp_packet_get_payload_type
+arv_gvsp_packet_get_buffer_payload_type
 arv_gvsp_packet_get_pixel_format
 arv_gvsp_packet_get_timestamp
 arv_gvsp_packet_get_width
@@ -1772,6 +1777,7 @@ arv_uvsp_packet_get_region
 arv_uvsp_packet_get_timestamp
 arv_uvsp_packet_debug
 arv_uvsp_packet_to_string
+arv_uvsp_packet_get_buffer_payload_type
 <SUBSECTION Private>
 ARV_UVSP_LEADER_MAGIC
 ARV_UVSP_TRAILER_MAGIC

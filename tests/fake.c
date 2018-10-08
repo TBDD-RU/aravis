@@ -108,7 +108,7 @@ registers_test (void)
 	arv_gc_integer_set_value (ARV_GC_INTEGER (node_a), 0xabcdefaa, NULL);
 
 	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_a), NULL);
-	g_assert_cmpint (value, ==, 0xefaa);
+	g_assert_cmpint (value, ==, -4182);
 
 	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_b), NULL);
 	g_assert_cmpint (value, ==, 0x1010);
@@ -119,10 +119,20 @@ registers_test (void)
 	arv_gc_integer_set_value (ARV_GC_INTEGER (node_c), 0xff, NULL);
 
 	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_c), NULL);
-	g_assert_cmpint (value, ==, 0x1);
+	g_assert_cmpint (value, ==, 1);
 
 	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_b), NULL);
 	g_assert_cmpint (value, ==, 0x1011);
+
+	arv_gc_integer_set_value (ARV_GC_INTEGER (node_b), 0xff, NULL);
+
+	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_b), NULL);
+	g_assert_cmpint (value, ==, 0xff);
+
+	arv_gc_integer_set_value (ARV_GC_INTEGER (node_c), 0x0, NULL);
+
+	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_c), NULL);
+	g_assert_cmpint (value, ==, 0);
 
 	g_object_unref (device);
 }
@@ -139,7 +149,7 @@ fake_device_test (void)
 	gint64 *values;
 	const char **string_values;
 	const char *string_value;
-	int n_values;
+	guint n_values;
 	double float_minimum, float_maximum;
 	const char *genicam;
 	gsize size;
@@ -236,13 +246,7 @@ fake_device_error_test (void)
 	ArvDevice *device;
 	ArvDeviceStatus status;
 	int int_value;
-	double dbl_value;
 	double boolean_value;
-	gint64 minimum, maximum;
-	gint64 *values;
-	const char **string_values;
-	int n_values;
-	double float_minimum, float_maximum;
 
 	device = arv_fake_device_new ("TEST0");
 	g_assert (ARV_IS_FAKE_DEVICE (device));
@@ -330,8 +334,6 @@ main (int argc, char *argv[])
 	int result;
 
 	g_test_init (&argc, &argv, NULL);
-
-	arv_g_type_init ();
 
 	arv_enable_interface ("Fake");
 

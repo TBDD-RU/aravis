@@ -339,7 +339,7 @@ arv_device_set_boolean_feature_value (ArvDevice *device, const char *feature, gb
 
 	node = arv_device_get_feature (device, feature);
 
-	if (ARV_IS_GC_INTEGER (node))
+	if (ARV_IS_GC_BOOLEAN (node))
 		arv_gc_boolean_set_value (ARV_GC_BOOLEAN (node), value, &error);
 	else
 		arv_warning_device ("[ArvDevice::set_boolean_feature_value] Node '%s' is not a boolean",
@@ -486,6 +486,16 @@ arv_device_get_integer_feature_value (ArvDevice *device, const char *feature)
 	return value;
 }
 
+/**
+ * arv_device_get_integer_feature_bounds:
+ * @device: a #ArvDevice
+ * @feature: feature name
+ * @min: (out): minimum feature value
+ * @max: (out): maximum feature value
+ *
+ * Retrieves feature bounds.
+ */
+
 void
 arv_device_get_integer_feature_bounds (ArvDevice *device, const char *feature, gint64 *min, gint64 *max)
 {
@@ -579,6 +589,16 @@ arv_device_get_float_feature_value (ArvDevice *device, const char *feature)
 
 	return value;
 }
+
+/**
+ * arv_device_get_float_feature_bounds:
+ * @device: a #ArvDevice
+ * @feature: feature name
+ * @min: (out): minimum feature value
+ * @max: (out): maximum feature value
+ *
+ * Retrieves feature bounds.
+ */
 
 void
 arv_device_get_float_feature_bounds (ArvDevice *device, const char *feature, double *min, double *max)

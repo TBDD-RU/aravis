@@ -513,7 +513,10 @@ register_test (void)
 {
 	ArvDevice *device;
 	ArvGc *genicam;
-	ArvGcNode *node;
+	ArvGcNode *node_a;
+	ArvGcNode *node_b;
+	ArvGcNode *node_c;
+	ArvGcNode *node_sc;
 	gint64 value;
 
 	device = arv_fake_device_new ("TEST0");
@@ -522,17 +525,38 @@ register_test (void)
 	genicam = arv_device_get_genicam (device);
 	g_assert (ARV_IS_GC (genicam));
 
-	node = arv_gc_get_node (genicam, "IntRegisterA");
-	g_assert (ARV_IS_GC_REGISTER (node));
+	node_a = arv_gc_get_node (genicam, "IntRegisterA");
+	g_assert (ARV_IS_GC_REGISTER (node_a));
 
-	value = arv_gc_register_get_address (ARV_GC_REGISTER (node), NULL);
+	value = arv_gc_register_get_address (ARV_GC_REGISTER (node_a), NULL);
 	g_assert_cmpint (value, ==, 0x1050);
 
-	node = arv_gc_get_node (genicam, "IntRegisterB");
-	g_assert (ARV_IS_GC_REGISTER (node));
+	node_b = arv_gc_get_node (genicam, "IntRegisterB");
+	g_assert (ARV_IS_GC_REGISTER (node_b));
 
-	value = arv_gc_register_get_address (ARV_GC_REGISTER (node), NULL);
+	value = arv_gc_register_get_address (ARV_GC_REGISTER (node_b), NULL);
 	g_assert_cmpint (value, ==, 0x20ff);
+
+	node_c = arv_gc_get_node (genicam, "IntRegisterC");
+	g_assert (ARV_IS_GC_REGISTER (node_c));
+
+	arv_gc_integer_set_value (ARV_GC_INTEGER (node_c), 0, NULL);
+
+	node_sc = arv_gc_get_node (genicam, "IntSignedRegisterC");
+	g_assert (ARV_IS_GC_REGISTER (node_sc));
+
+	arv_gc_integer_set_value (ARV_GC_INTEGER (node_sc), -1, NULL);
+
+	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_sc), NULL);
+	g_assert_cmpint (value, ==, -1);
+
+	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_c), NULL);
+	g_assert_cmpint (value, ==, 0x00000000ffffffff);
+
+	arv_gc_integer_set_value (ARV_GC_INTEGER (node_sc), 0x7fffffff, NULL);
+
+	value = arv_gc_integer_get_value (ARV_GC_INTEGER (node_sc), NULL);
+	g_assert_cmpint (value, ==, 0x7fffffff);
 
 	g_object_unref (device);
 }
@@ -609,7 +633,7 @@ create_buffer_with_chunk_data (void)
 	size = 64 + 8 + 64 + 8 + 4 * sizeof (ArvChunkInfos);
 
 	buffer = arv_buffer_new (size, NULL);
-	buffer->priv->gvsp_payload_type = ARV_GVSP_PAYLOAD_TYPE_CHUNK_DATA;
+	buffer->priv->payload_type = ARV_BUFFER_PAYLOAD_TYPE_CHUNK_DATA;
 	buffer->priv->status = ARV_BUFFER_STATUS_SUCCESS;
 	data = (char *) arv_buffer_get_data (buffer, &size);
 
@@ -731,8 +755,6 @@ main (int argc, char *argv[])
 	int result;
 
 	g_test_init (&argc, &argv, NULL);
-
-	arv_g_type_init ();
 
 	arv_set_fake_camera_genicam_filename (GENICAM_FILENAME);
 

@@ -25,6 +25,7 @@ static const ExpressionTestData expression_test_data[] = {
 	{"/evaluator/multiplication",			"2.5*4",	       		8,	FALSE,	10.0},
 	{"/evaluator/division",				"10/4",				2,	FALSE,	2.5},
 	{"/evaluator/division-float",			"10.0/4",			2,	FALSE,	2.5},
+	{"/evaluator/simple-minus", 			"-1",	 			-1, 	FALSE,	-1.0},
 	{"/evaluator/minus",				"4*-3",				-12,	FALSE,	-12.0},
 	{"/evaluator/plus",				"4*+3",				12,	FALSE,	12.0},
 	{"/evaluator/remainder",			"10%3",				1,	FALSE,	1.0},
@@ -329,8 +330,6 @@ main (int argc, char *argv[])
 	int i;
 
 	g_test_init (&argc, &argv, NULL);
-
-	arv_g_type_init ();
 
 	for (i = 0; i < G_N_ELEMENTS (expression_test_data); i++)
 		g_test_add_data_func (expression_test_data[i].test_name,

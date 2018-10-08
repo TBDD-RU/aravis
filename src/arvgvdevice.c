@@ -71,11 +71,7 @@ struct iphdr
 #endif
 
 typedef struct {
-#if GLIB_CHECK_VERSION(2,32,0)
 	GMutex mutex;
-#else
-	GMutex *mutex;
-#endif
 
 	guint16 packet_id;
 
@@ -154,11 +150,7 @@ _read_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *b
 
 	g_return_val_if_fail (answer_size <= ARV_GV_DEVICE_BUFFER_SIZE, FALSE);
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_lock (&io_data->mutex);
-#else
-	g_mutex_lock (io_data->mutex);
-#endif
 
 	packet = arv_gvcp_packet_new_read_memory_cmd (address,
 						      ((size + sizeof (guint32) - 1)
@@ -226,7 +218,7 @@ _read_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *b
 					pending_ack = FALSE;
 					expected_answer = FALSE;
 					if (local_error != NULL)
-						g_warning ("[GvDevice::read_memory] Ack reception error: %s", local_error->message);
+						arv_warning_device ("[GvDevice::read_memory] Ack reception error: %s", local_error->message);
 					g_clear_error (&local_error);
 				}
 			} while (pending_ack);
@@ -237,7 +229,7 @@ _read_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *b
 				memcpy (buffer, arv_gvcp_packet_get_read_memory_ack_data (ack_packet), size);
 		} else {
 			if (local_error != NULL)
-				g_warning ("[GvDevice::read_memory] Command sending error: %s", local_error->message);
+				arv_warning_device ("[GvDevice::read_memory] Command sending error: %s", local_error->message);
 			g_clear_error (&local_error);
 		}
 
@@ -246,11 +238,7 @@ _read_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *b
 
 	arv_gvcp_packet_free (packet);
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_unlock (&io_data->mutex);
-#else
-	g_mutex_unlock (io_data->mutex);
-#endif
 
 	if (!success) {
 		if (error != NULL && *error == NULL)
@@ -272,11 +260,7 @@ _write_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *
 	gboolean success = FALSE;
 	guint32 timeout_ms;
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_lock (&io_data->mutex);
-#else
-	g_mutex_lock (io_data->mutex);
-#endif
 
 	packet = arv_gvcp_packet_new_write_memory_cmd (address,
 						       ((size + sizeof (guint32) - 1) /
@@ -346,7 +330,7 @@ _write_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *
 					pending_ack = FALSE;
 					expected_answer = FALSE;
 					if (local_error != NULL)
-						g_warning ("[GvDevice::write_memory] Ack reception error: %s", local_error->message);
+						arv_warning_device ("[GvDevice::write_memory] Ack reception error: %s", local_error->message);
 					g_clear_error (&local_error);
 				}
 			} while (pending_ack);
@@ -354,7 +338,7 @@ _write_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *
 			success = success && expected_answer;
 		} else {
 			if (local_error != NULL)
-				g_warning ("[GvDevice::write_memory] Command sending error: %s", local_error->message);
+				arv_warning_device ("[GvDevice::write_memory] Command sending error: %s", local_error->message);
 			g_clear_error (&local_error);
 		}
 
@@ -364,11 +348,7 @@ _write_memory (ArvGvDeviceIOData *io_data, guint64 address, guint32 size, void *
 
 	arv_gvcp_packet_free (packet);
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_unlock (&io_data->mutex);
-#else
-	g_mutex_unlock (io_data->mutex);
-#endif
 
 	if (!success) {
 		if (error != NULL && *error == NULL)
@@ -390,11 +370,7 @@ _read_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 *value_plac
 	gboolean success = FALSE;
 	guint32 timeout_ms;
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_lock (&io_data->mutex);
-#else
-	g_mutex_lock (io_data->mutex);
-#endif
 
 	packet = arv_gvcp_packet_new_read_register_cmd (address, 0, &packet_size);
 
@@ -459,7 +435,7 @@ _read_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 *value_plac
 					pending_ack = FALSE;
 					expected_answer = FALSE;
 					if (local_error != NULL)
-						g_warning ("[GvDevice::read_register] Ack reception error: %s", local_error->message);
+						arv_warning_device ("[GvDevice::read_register] Ack reception error: %s", local_error->message);
 					g_clear_error (&local_error);
 				}
 			} while (pending_ack);
@@ -470,7 +446,7 @@ _read_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 *value_plac
 				*value_placeholder = arv_gvcp_packet_get_read_register_ack_value (ack_packet);
 		} else {
 			if (local_error != NULL)
-				g_warning ("[GvDevice::read_register] Command sending error: %s", local_error->message);
+				arv_warning_device ("[GvDevice::read_register] Command sending error: %s", local_error->message);
 			g_clear_error (&local_error);
 		}
 
@@ -480,11 +456,7 @@ _read_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 *value_plac
 
 	arv_gvcp_packet_free (packet);
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_unlock (&io_data->mutex);
-#else
-	g_mutex_unlock (io_data->mutex);
-#endif
 
 	if (!success) {
 		*value_placeholder = 0;
@@ -508,11 +480,7 @@ _write_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 value, GEr
 	gboolean success = FALSE;
 	guint32 timeout_ms;
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_lock (&io_data->mutex);
-#else
-	g_mutex_lock (io_data->mutex);
-#endif
 
 	packet = arv_gvcp_packet_new_write_register_cmd (address, value, io_data->packet_id, &packet_size);
 
@@ -576,7 +544,7 @@ _write_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 value, GEr
 					pending_ack = FALSE;
 					expected_answer = FALSE;
 					if (local_error != NULL)
-						g_warning ("[GvDevice::write_register] Ack reception error: %s", local_error->message);
+						arv_warning_device ("[GvDevice::write_register] Ack reception error: %s", local_error->message);
 					g_clear_error (&local_error);
 				}
 			} while (pending_ack);
@@ -584,7 +552,7 @@ _write_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 value, GEr
 			success = success && expected_answer;
 		} else {
 			if (local_error != NULL)
-				g_warning ("[GvDevice::write_register] Command sending error: %s", local_error->message);
+				arv_warning_device ("[GvDevice::write_register] Command sending error: %s", local_error->message);
 			g_clear_error (&local_error);
 		}
 
@@ -594,11 +562,7 @@ _write_register (ArvGvDeviceIOData *io_data, guint32 address, guint32 value, GEr
 
 	arv_gvcp_packet_free (packet);
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_unlock (&io_data->mutex);
-#else
-	g_mutex_unlock (io_data->mutex);
-#endif
 
 	if (!success) {
 		if (error != NULL && *error == NULL)
@@ -683,6 +647,10 @@ arv_gv_device_take_control (ArvGvDevice *gv_device)
 					     ARV_GVBS_CONTROL_CHANNEL_PRIVILEGE_CONTROL, NULL);
 
 	gv_device->priv->io_data->is_controller = success;
+
+	/* Disable GVSP extended ID mode for now, it is not supported yet by ArvGvStream */
+	if (success)
+		arv_device_set_string_feature_value (ARV_DEVICE (gv_device), "GevGVSPExtendedIDMode", "Off");
 
 	if (!success)
 		arv_warning_device ("[GvDevice::take_control] Can't get control access");
@@ -1357,11 +1325,8 @@ arv_gv_device_new (GInetAddress *interface_address, GInetAddress *device_address
 
 	io_data = g_new0 (ArvGvDeviceIOData, 1);
 
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_init (&io_data->mutex);
-#else
-	io_data->mutex = g_mutex_new ();
-#endif
+
 	io_data->packet_id = 65300; /* Start near the end of the circular counter */
 
 	io_data->interface_address = g_inet_socket_address_new (interface_address, 0);
@@ -1398,8 +1363,8 @@ arv_gv_device_new (GInetAddress *interface_address, GInetAddress *device_address
 
 	gv_device->priv->heartbeat_data = heartbeat_data;
 
-	gv_device->priv->heartbeat_thread = arv_g_thread_new ("arv_gv_heartbeat", arv_gv_device_heartbeat_thread,
-							      gv_device->priv->heartbeat_data);
+	gv_device->priv->heartbeat_thread = g_thread_new ("arv_gv_heartbeat", arv_gv_device_heartbeat_thread,
+							  gv_device->priv->heartbeat_data);
 
 	arv_device_read_register (ARV_DEVICE (gv_device), ARV_GVBS_GVCP_CAPABILITY_OFFSET, &capabilities, NULL);
 	gv_device->priv->is_packet_resend_supported = (capabilities & ARV_GVBS_GVCP_CAPABILITY_PACKET_RESEND) != 0;
@@ -1453,11 +1418,7 @@ arv_gv_device_finalize (GObject *object)
 	g_object_unref (io_data->interface_address);
 	g_object_unref (io_data->socket);
 	g_free (io_data->buffer);
-#if GLIB_CHECK_VERSION(2,32,0)
 	g_mutex_clear (&io_data->mutex);
-#else
-	g_mutex_free (io_data->mutex);
-#endif
 
 	g_free (gv_device->priv->io_data);
 
